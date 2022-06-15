@@ -5,6 +5,7 @@
 package it.polito.tdp.genes;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.genes.model.Model;
@@ -38,12 +39,47 @@ public class FXMLController {
 
     @FXML
     void doContaArchi(ActionEvent event) {
-
+    	double s;
+    	try {
+			s = Double.parseDouble(txtSoglia.getText());
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			txtResult.setText("Inserisci un numero valido!");
+			return;
+		}
+    	
+    	if(s < this.model.getMinWeight() || s > this.model.getMaxWeight()) {
+    		txtResult.setText("Inserisci un valore tra "+this.model.getMinWeight()+" e "+this.model.getMaxWeight());
+    		return;
+    	}
+    	
+    	String res = this.model.contaArchi(s);
+    	txtResult.appendText("\n"+res);
     }
 
     @FXML
     void doRicerca(ActionEvent event) {
-
+    	double s;
+    	try {
+			s = Double.parseDouble(txtSoglia.getText());
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			txtResult.setText("Inserisci un numero valido!");
+			return;
+		}
+    	
+    	if(s < this.model.getMinWeight() || s > this.model.getMaxWeight()) {
+    		txtResult.setText("Inserisci un valore tra "+this.model.getMinWeight()+" e "+this.model.getMaxWeight());
+    		return;
+    	}
+    	
+    	List<Integer> result = this.model.ricerca(s);
+    	
+    	txtResult.setText("Cammino più lungo\n");
+    	
+    	for(Integer i: result) {
+    		txtResult.appendText(i+"\n");
+    	}
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -57,6 +93,7 @@ public class FXMLController {
 
 	public void setModel(Model model) {
 		this.model = model ;
-		
+		String res = this.model.creaGrafo();
+		txtResult.setText(res);
 	}
 }
